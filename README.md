@@ -1,6 +1,5 @@
 
 
-![ace ai](https://github.com/user-attachments/assets/eee79242-4056-4d19-b655-2873788979e1)
 
 ### Make sure to create a `.env` file with following variables -
 
