@@ -39,23 +39,23 @@ export async function POST(req) {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
     try {
-      const existingUser = await db.user.findUnique({
+      // Use upsert to avoid unique constraint violations if user was partially created
+      await db.user.upsert({
         where: { clerkUserId: id },
+        update: {
+          email: email_addresses[0]?.email_address || "",
+          name: `${first_name || ""} ${last_name || ""}`.trim() || "User",
+        },
+        create: {
+          clerkUserId: id,
+          email: email_addresses[0]?.email_address || "",
+          name: `${first_name || ""} ${last_name || ""}`.trim() || "User",
+        },
       });
-
-      if (!existingUser) {
-        await db.user.create({
-          data: {
-            clerkUserId: id,
-            email: email_addresses[0]?.email_address || "",
-            name: `${first_name || ""} ${last_name || ""}`.trim() || "User",
-          },
-        });
-        console.log(`[Clerk Webhook] User created: ${id}`);
-      }
+      console.log(`[Clerk Webhook] User synced: ${id}`);
     } catch (error) {
-      console.error("[Clerk Webhook] Error creating user:", error.message);
-      return new Response("Error creating user", { status: 500 });
+      console.error("[Clerk Webhook] Error syncing user:", error.message);
+      return new Response("Error syncing user", { status: 500 });
     }
   }
 

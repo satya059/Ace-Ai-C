@@ -1,10 +1,22 @@
 import { getAssessments } from "@/actions/interview";
+import { redirect } from "next/navigation";
 import StatsCards from "./_components/stats-cards";
 import PerformanceChart from "./_components/performace-chart";
 import QuizList from "./_components/quiz-list";
 
 export default async function InterviewPrepPage() {
-  const assessments = await getAssessments();
+  let assessments = [];
+
+  try {
+    assessments = await getAssessments();
+  } catch (error) {
+    if (error.message.includes("User profile not found")) {
+      // Redirect to onboarding if user hasn't completed it yet
+      redirect("/onboarding");
+    }
+    // Re-throw other errors
+    throw error;
+  }
 
   return (
     <div>
