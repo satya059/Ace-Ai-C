@@ -13,7 +13,7 @@ export async function saveResume(content) {
     where: { clerkUserId: userId },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) throw new Error("User profile not found. Please complete onboarding.");
 
   try {
     const resume = await db.resume.upsert({

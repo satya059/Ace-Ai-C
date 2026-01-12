@@ -66,7 +66,7 @@ export async function getIndustryInsights() {
     },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) throw new Error("User profile not found. Please complete onboarding.");
 
   // If no insights exist, generate them
   if (!user.industryInsight) {

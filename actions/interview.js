@@ -163,7 +163,7 @@ export async function getAssessments() {
     where: { clerkUserId: userId },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) throw new Error("User profile not found. Please complete onboarding.");
 
   try {
     const assessments = await db.assessment.findMany({
